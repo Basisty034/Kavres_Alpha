@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ForumController;
+use App\Http\Controllers\Auth\LoginController; // Tambahkan ini
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
@@ -28,3 +29,15 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index
 Route::get('/profile/menu/{menu}', [ProfileController::class, 'menu'])->name('profile.menu');
 Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+
+// Rute Logout
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Rute Autentikasi
+require __DIR__.'/auth.php';
+
+// Tambahkan rute dashboard
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    // Tambahkan rute lain yang memerlukan autentikasi di sini
+});

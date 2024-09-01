@@ -10,4 +10,10 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    // Tambahkan metode dashboard
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Orlanhexa</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -23,47 +23,81 @@
         .sidebar {
             margin-top: 70px; /* Adjust this value to move the sidebar down */
         }
-        .navbar-nav .nav-item .nav-link.active {
-            background-color: #343a40;
+        .navbar-nav .nav-item .nav-link.active,
+        .navbar-nav .nav-item .nav-link:focus,
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: #5B5B5B;
             color: white !important;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <i class="fas fa-store"></i> Orlanhexa <!-- Icon Market -->
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('sales') ? 'active' : '' }}" href="{{ route('sales.index') }}">Sales</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('orders') ? 'active' : '' }}" href="{{ route('orders.index') }}">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('balance') ? 'active' : '' }}" href="{{ route('balance.index') }}">Balance</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('forum') ? 'active' : '' }}" href="{{ route('forum.index') }}">Forum</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('profile') ? 'active' : '' }}" href="{{ route('profile.index') }}">Profile</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="container">
+            <span class="navbar-brand">
+                <i class="fas fa-store"></i> Orlanhexa
+            </span>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Left Side Of Navbar -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('sales.index') }}">Sales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('balances.index') }}">Balance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('forum.index') }}">Forum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('profile.index') }}">Profile</a>
+                    </li>
+                </ul>
+
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Authentication Links -->
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            </li>
+                        @endif
+                    @else
+                        <li class="nav-item">
+                            <span class="nav-link">{{ Auth::user()->name }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
+                    @endguest
+                </ul>
+            </div>
         </div>
     </nav>
-    <div class="container-fluid mt-4">
+
+    <main class="py-4">
         @yield('content')
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </main>
 </body>
 </html>

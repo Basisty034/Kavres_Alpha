@@ -1,8 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="content-area mt-5">
-    <h1>Home</h1>
-    <p>Welcome to the home page.</p>
-</div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">{{ __('Home') }}</div>
+
+                    <div class="card-body">
+                        {{ __('Welcome to the Home Page!') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
