@@ -9,21 +9,18 @@ class CreateOrdersTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('product_name');
-            $table->integer('quantity');
-            $table->decimal('price', 8, 2);
-            $table->string('image')->after('product_name');
-            $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-    }
+    public function up()
+{
+    Schema::create('orders', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->unsignedBigInteger('user_id');
+        $table->string('product_name');
+        $table->integer('quantity');
+        $table->decimal('price', 8, 2);
+        $table->string('image');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
