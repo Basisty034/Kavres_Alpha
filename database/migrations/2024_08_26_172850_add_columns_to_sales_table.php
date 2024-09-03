@@ -9,10 +9,14 @@ class AddColumnsToSalesTable extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->string('image')->after('name');
+            $table->string('name')->after('product_id');
+            $table->string('category')->after('name');
+            $table->text('description')->after('category');
+            $table->decimal('price', 8, 2)->after('description');
+            $table->integer('stock')->after('price');
+            $table->string('image')->after('stock'); // Add image field
         });
     }
-
 
     /**
      * Reverse the migrations.
@@ -20,7 +24,7 @@ class AddColumnsToSalesTable extends Migration
     public function down()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('image');
+            $table->dropColumn(['name', 'category', 'description', 'price', 'stock', 'image']);
         });
     }
 }

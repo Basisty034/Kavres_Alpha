@@ -2,38 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
+use App\Models\Sales;
 use Illuminate\Http\Request;
 
 class SalesController extends Controller
 {
     public function index()
     {
-        $sales = Sale::all();
+        $sales = Sales::with('product')->get();
         return view('sales.index', compact('sales'));
     }
 
     public function category($category)
     {
-        $sales = Sale::where('category', $category)->get();
-        return view('sales.category', compact('sales', 'category'));
+        $sales = Sales::whereHas('product', function($query) use ($category) {
+            $query->where('category', $category);
+        })->get();
+        return view('sales.index', compact('sales', 'category'));
     }
 
-    public function show($id)
+    public function sell(Sales $sale)
     {
-        $sale = Sale::findOrFail($id);
-        return view('sales.show', compact('sale'));
-    }
-
-    public function order(Request $request, Sale $sale)
-    {
-        // Logika untuk memproses order
-    }
-
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $sales = Sale::where('name', 'LIKE', "%$query%")->get();
-        return view('sales.search', compact('sales', 'query'));
+        // Logika untuk menjual produk
+        // Misalnya, mengurangi stok atau menandai produk sebagai terjual
+        return redirect()->route('sales.index')->with('success', 'Product sold successfully.');
     }
 }

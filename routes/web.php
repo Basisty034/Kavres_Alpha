@@ -17,8 +17,8 @@ Route::get('/sales/{id}', [SalesController::class, 'show'])->name('sales.show');
 Route::post('/sales/{sale}/order', [SalesController::class, 'order'])->name('sales.order');
 Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
 Route::get('/orders/category/{category}', [OrdersController::class, 'category'])->name('orders.category');
-Route::get('/orders/{order}', [OrdersController::class, 'show'])->name('orders.show');
-Route::post('/orders/{order}/order', [OrdersController::class, 'order'])->name('orders.order');
+Route::get('/orders/{product}', [OrdersController::class, 'show'])->name('orders.show');
+Route::post('/orders/{product}/order', [OrdersController::class, 'order'])->name('orders.order');
 Route::get('/orders/search', [OrdersController::class, 'search'])->name('orders.search');
 Route::get('/sales/search', [SalesController::class, 'search'])->name('sales.search');
 Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
@@ -41,3 +41,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     // Tambahkan rute lain yang memerlukan autentikasi di sini
 });
+
+Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+Route::get('/orders/category/{category}', [OrdersController::class, 'category'])->name('orders.category');
+Route::get('/orders/{product}', [OrdersController::class, 'show'])->name('orders.show');
+Route::post('/orders/{product}/order', [OrdersController::class, 'order'])->name('orders.order');
+Route::get('/orders/confirmation/{order}', [OrdersController::class, 'confirmation'])->name('orders.confirmation');
+Route::post('/orders/confirmation/{order}/confirm', [OrdersController::class, 'confirmPayment'])->name('orders.confirmPayment');
+Route::get('/orders/search', [OrdersController::class, 'search'])->name('orders.search');
+
+Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
+Route::get('/sales/category/{category}', [SalesController::class, 'category'])->name('sales.category');
+Route::post('/sales/{sale}/sell', [SalesController::class, 'sell'])->name('sales.sell');

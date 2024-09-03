@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Schema;
 class CreateBalancesTable extends Migration
 {
     public function up()
-    {
-        Schema::create('balances', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->decimal('balance', 8, 2)->default(0);
-            $table->timestamps();
+{
+    Schema::create('balances', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->unsignedBigInteger('user_id');
+        $table->decimal('amount', 8, 2);
+        $table->string('payment_method');
+        $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-    }
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+    });
+}
 
     /**
      * Reverse the migrations.

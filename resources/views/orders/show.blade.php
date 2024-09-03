@@ -1,24 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-md-3">
-        <div class="list-group list-group-flush mt-4">
-            <h4 class="list-group-item">Orders - Categories</h4>
-            <a href="{{ route('orders.category', 'motherboard') }}" class="list-group-item list-group-item-action">Motherboard</a>
-            <a href="{{ route('orders.category', 'antenna') }}" class="list-group-item list-group-item-action">Antenna</a>
-            <a href="{{ route('orders.category', 'microchip') }}" class="list-group-item list-group-item-action">Microchip</a>
-            <a href="{{ route('orders.category', 'semiconductor') }}" class="list-group-item list-group-item-action">Semiconductor</a>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ asset('img/products/' . $product->image) }}" class="img-fluid" alt="{{ $product->name }}">
         </div>
-    </div>
-    <div class="col-md-9">
-        <div class="content-area mt-5">
-            <h1>{{ $order->product_name }}</h1>
-            <img src="{{ asset('img/orders/' . $order->image) }}" alt="{{ $order->product_name }}" class="img-fluid">
-            <p>{{ $order->description }}</p>
-            <h5>Price: ${{ $order->price }}</h5>
-            <h5>Stock: {{ $order->stock }}</h5>
-            <form action="{{ route('orders.order', $order) }}" method="POST">
+        <div class="col-md-6">
+            <h1>{{ $product->name }}</h1>
+            <p>{{ $product->description }}</p>
+            <h4>${{ $product->price }}</h4>
+            <p>Stock: <span id="product_stock">{{ $product->stock }}</span></p>
+            <form action="{{ route('orders.order', $product) }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="payment_method">Payment Method</label>
@@ -26,11 +19,24 @@
                         <option value="">Select Payment Method</option>
                         <option value="credit_card">Credit Card</option>
                         <option value="paypal">PayPal</option>
-                        <option value="bank_transfer">Bank Transfer</option>
                     </select>
                 </div>
-                <h5>Total Payment: ${{ $order->price * $order->quantity }}</h5>
-                <button type="submit" class="btn btn-primary" id="order_button" disabled>Order</button>
+                <div class="form-group">
+                    <label for="address">Sent to Address</label>
+                    <input type="text" name="address" id="address" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ $product->stock }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="total_payment">Total Payment</label>
+                    <input type="text" id="total_payment" class="form-control" readonly>
+                </div>
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-secondary" id="order_button" disabled>Order</button>
+                    <button class="btn btn-success ml-2" id="confirm_button" style="display: none;">Order Confirmation</button>
+                </div>
             </form>
         </div>
     </div>
@@ -39,7 +45,7 @@
 <script>
     document.getElementById('payment_method').addEventListener('change', function() {
         var orderButton = document.getElementById('order_button');
-        if (this.value && {{ $order->stock }} > 0) {
+        if (this.value && document.getElementById('quantity').value > 0) {
             orderButton.disabled = false;
             orderButton.classList.remove('btn-secondary');
             orderButton.classList.add('btn-success');
@@ -48,6 +54,38 @@
             orderButton.classList.remove('btn-success');
             orderButton.classList.add('btn-secondary');
         }
+    });
+
+    document.getElementById('quantity').addEventListener('input', function() {
+        var orderButton = document.getElementById('order_button');
+        var totalPayment = document.getElementById('total_payment');
+        var quantity = this.value;
+        var price = {{ $product->price }};
+        totalPayment.value = '$' + (quantity * price).toFixed(2);
+
+        if (quantity > 0 && document.getElementById('payment_method').value) {
+            orderButton.disabled = false;
+            orderButton.classList.remove('btn-secondary');
+            orderButton.classList.add('btn-success');
+        } else {
+            orderButton.disabled = true;
+            orderButton.classList.remove('btn-success');
+            orderButton.classList.add('btn-secondary');
+        }
+    });
+
+    document.getElementById('order_button').addEventListener('click', function(event) {
+        event.preventDefault();
+        var confirmButton = document.getElementById('confirm_button');
+        confirmButton.style.display = 'block';
+    });
+
+    document.getElementById('confirm_button').addEventListener('click', function() {
+        alert('Payment success');
+        var quantity = document.getElementById('quantity').value;
+        var stockElement = document.getElementById('product_stock');
+        stockElement.innerText = parseInt(stockElement.innerText) - parseInt(quantity);
+        window.location.href = "{{ route('orders.index') }}";
     });
 </script>
 @endsection
